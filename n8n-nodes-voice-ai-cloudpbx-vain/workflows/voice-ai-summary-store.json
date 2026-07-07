@@ -1,0 +1,43 @@
+{
+  "name": "Voice AI Summary - Store",
+  "nodes": [
+    {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+      "name": "Receive Summary",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "c7f3a1b2-d4e5-6789-0abc-def123456780",
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "summary-store",
+        "responseMode": "onReceived",
+        "options": {}
+      }
+    },
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678902",
+      "name": "Store Summary",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "parameters": {
+        "resource": "customData",
+        "operation": "set",
+        "key": "lastSummary",
+        "value": "={{ JSON.stringify($json) }}"
+      }
+    }
+  ],
+  "connections": {
+    "Receive Summary": {
+      "main": [
+        [{ "node": "Store Summary", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

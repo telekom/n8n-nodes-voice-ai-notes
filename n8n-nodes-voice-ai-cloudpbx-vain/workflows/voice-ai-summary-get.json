@@ -1,0 +1,73 @@
+{
+  "name": "Voice AI Summary - GET",
+  "nodes": [
+    {
+      "id": "d4e5f6a7-b8c9-0123-defa-234567890104",
+      "name": "GET Summary",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "e8a4b3c2-f5d6-7890-1abc-def234567891",
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "summary-get",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "e5f6a7b8-c9d0-1234-efab-345678901205",
+      "name": "Read Summary",
+      "type": "n8n-nodes-base.n8n",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "parameters": {
+        "resource": "customData",
+        "operation": "get",
+        "key": "lastSummary"
+      }
+    },
+    {
+      "id": "f6a7b8c9-d0e1-2345-fabc-456789012306",
+      "name": "Parse JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300],
+      "parameters": {
+        "jsCode": "const raw = $json.data;\nif (!raw) return [{ json: { error: 'No summary available yet' } }];\nreturn [{ json: typeof raw === 'string' ? JSON.parse(raw) : raw }];"
+      }
+    },
+    {
+      "id": "a7b8c9d0-e1f2-3456-abcd-567890123407",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [900, 300],
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "GET Summary": {
+      "main": [
+        [{ "node": "Read Summary", "type": "main", "index": 0 }]
+      ]
+    },
+    "Read Summary": {
+      "main": [
+        [{ "node": "Parse JSON", "type": "main", "index": 0 }]
+      ]
+    },
+    "Parse JSON": {
+      "main": [
+        [{ "node": "Respond", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "n8n-nodes-voice-ai-cloudpbx",
+  "version": "0.2.0",
+  "description": "n8n community node for CloudPBX Voice AI – automatically receives call summaries via webhook and extracts tasks and appointments",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "cloudpbx",
+    "voice ai",
+    "call summary",
+    "tasks",
+    "appointments",
+    "webhook",
+    "telephony"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/GITHUB_USERNAME/n8n-nodes-voice-ai-cloudpbx",
+  "author": {
+    "name": "André Rink",
+    "email": "andre.rink@telekom.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GITHUB_USERNAME/n8n-nodes-voice-ai-cloudpbx.git"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "npx @n8n/scan-community-package n8n-nodes-voice-ai-cloudpbx",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/CloudPBXApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/VoiceAINotesWebhook/VoiceAINotesWebhook.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "n8n-workflow": "2.13.1"
+  },
+  "peerDependencies": {
+    "n8n-workflow": ">=1.0.0"
+  }
+}
