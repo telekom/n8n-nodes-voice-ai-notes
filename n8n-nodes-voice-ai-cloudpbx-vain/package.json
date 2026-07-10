@@ -14,19 +14,20 @@
     "telephony"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/GITHUB_USERNAME/n8n-nodes-voice-ai-cloudpbx",
+  "homepage": "https://gitlab.com/andrerink/n8n-nodes-voice-ai-cloudpbx",
   "author": {
     "name": "André Rink",
-    "email": "andre.rink@telekom.de"
+    "email": "andre.rink@ebcteams.de"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/GITHUB_USERNAME/n8n-nodes-voice-ai-cloudpbx.git"
+    "url": "https://gitlab.com/andrerink/n8n-nodes-voice-ai-cloudpbx.git"
   },
   "main": "index.js",
   "scripts": {
     "build": "tsc",
     "lint": "npx @n8n/scan-community-package n8n-nodes-voice-ai-cloudpbx",
+    "test": "npx @n8n/scan-community-package n8n-nodes-voice-ai-cloudpbx",
     "prepublishOnly": "npm run build"
   },
   "files": [
