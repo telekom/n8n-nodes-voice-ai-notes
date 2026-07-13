@@ -1,1 +1,0 @@
-{"version":3,"file":"VoiceAINotesWebhook.node.d.ts","sourceRoot":"","sources":["../../../nodes/VoiceAINotesWebhook/VoiceAINotesWebhook.node.ts"],"names":[],"mappings":"AAAA,OAAO,EACN,iBAAiB,EACjB,oBAAoB,EACpB,SAAS,EAGT,MAAM,cAAc,CAAC;AA0BtB,qBAAa,mBAAoB,YAAW,SAAS;IACpD,WAAW,8CAAmB;IAExB,OAAO,CAAC,IAAI,EAAE,iBAAiB,GAAG,OAAO,CAAC,oBAAoB,CAAC;CAyKrE"}

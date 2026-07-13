@@ -1,15 +1,15 @@
-# Technical Architecture — n8n-nodes-voice-ai-cloudpbx
+# Technical Architecture — n8n-nodes-voice-ai-notes
 
 **Author:** André Rink · andre.rink@telekom.de  
-**Version:** 0.2.0  
-**Package:** `n8n-nodes-voice-ai-cloudpbx`  
+**Version:** 0.3.3  
+**Package:** `n8n-nodes-voice-ai-notes`  
 **License:** MIT
 
 ---
 
 ## Summary
 
-`n8n-nodes-voice-ai-cloudpbx` is a custom community node for the n8n workflow automation platform. It acts as a **webhook trigger** that receives AI-generated call summaries from the **CloudPBX Voice AI** service (Telekom Deutschland / BroadSoft XSI) and exposes the structured data — tasks, appointments, participants, and topics — to downstream n8n workflow nodes.
+`n8n-nodes-voice-ai-notes` is a custom community node for the n8n workflow automation platform. It acts as a **webhook trigger** that receives AI-generated call summaries from the **CloudPBX Voice AI** service (Telekom Deutschland / BroadSoft XSI) and exposes the structured data — tasks, appointments, participants, and topics — to downstream n8n workflow nodes.
 
 The node eliminates manual integration effort between the CloudPBX telephony platform and task/calendar systems (e.g. Todoist, Google Calendar, Microsoft To Do, Slack) by providing a typed, authenticated entry point into n8n.
 
@@ -152,7 +152,7 @@ The compiled output targets **Node.js ≥ 18** (n8n's minimum runtime requiremen
 ### Source layout
 
 ```
-n8n-nodes-voice-ai-cloudpbx/
+n8n-nodes-voice-ai-notes/
 ├── credentials/
 │   └── CloudPBXApi.credentials.ts     # Credential type definition
 ├── nodes/
