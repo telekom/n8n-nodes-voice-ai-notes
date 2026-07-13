@@ -65,8 +65,8 @@ The node expects the CloudPBX Voice AI webhook payload format (schema version `0
   "callIdentifier": "abc-123",
   "summary": "Call about the project deadline and next steps.",
   "callParticipants": {
-    "vainCustomerPhoneNumber": "+4922843354422",
-    "otherAttendeePhoneNumber": "+4915112345678"
+    "vainCustomerPhoneNumber": "+4922147106642",
+    "otherAttendeePhoneNumber": "+491713920042"
   },
   "toDos": [
     { "title": "Send contract", "assignee": "John" }
@@ -80,7 +80,7 @@ The node expects the CloudPBX Voice AI webhook payload format (schema version `0
   "topics": [
     { "title": "Contract", "details": ["deadline", "terms"] }
   ],
-  "callerDetails": ["+4922843354422"]
+  "callerDetails": ["+4922147106642"]
 }
 ```
 
