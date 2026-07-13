@@ -37,11 +37,6 @@ export function createMetadata(options: MetadataOptions): OutputMetadata {
 	};
 }
 
-export function addIndexFields(item: IDataObject, index: number, total: number): void {
-	item.itemIndex = index + 1;
-	item.totalItems = total;
-}
-
 export function buildTaskItem(
 	task: CallTask,
 	index: number,

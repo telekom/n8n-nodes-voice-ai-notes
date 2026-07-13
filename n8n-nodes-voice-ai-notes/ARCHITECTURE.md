@@ -28,11 +28,11 @@ The node eliminates manual integration effort between the CloudPBX telephony pla
 
 ### Input payload structure
 
-The node expects the CloudPBX Voice AI webhook format (schema v0.2.0), with all call data on the root level:
+The node expects the CloudPBX Voice AI webhook format (schema v0.2.1), with all call data on the root level:
 
 ```json
 {
-  "schemaVersion": "0.2.0",
+  "schemaVersion": "0.2.1",
   "callIdentifier": "string",
   "summary": "string",
   "toDos": [
@@ -51,7 +51,7 @@ The node expects the CloudPBX Voice AI webhook format (schema v0.2.0), with all 
 }
 ```
 
-**Schema version enforcement:** The node validates that the inbound `schemaVersion` matches the expected version (0.2.0). Requests with mismatched versions are rejected with a 400 Bad Request response.
+**Schema version enforcement:** The node validates that the inbound `schemaVersion` matches the expected version (0.2.1). Requests with mismatched versions are rejected with a 400 Bad Request response.
 
 ### Output modes
 

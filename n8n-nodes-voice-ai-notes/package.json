@@ -19,7 +19,6 @@
     "name": "André Rink",
     "email": "andre.rink@telekom.de"
   },
-  "main": "index.js",
   "scripts": {
     "build": "tsc",
     "lint": "npx @n8n/scan-community-package n8n-nodes-voice-ai-notes",
