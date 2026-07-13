@@ -1,6 +1,6 @@
 {
   "name": "@t-digital/n8n-nodes-voice-ai-cloudpbx",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "n8n community node for CloudPBX Voice AI – automatically receives call summaries via webhook and extracts tasks and appointments",
   "keywords": [
     "n8n-community-node-package",
@@ -14,14 +14,10 @@
     "telephony"
   ],
   "license": "MIT",
-  "homepage": "https://gitlab.devops.telekom.de/agentic-ai-platform/magenta-ai-plattform/n8n-nodes/-/tree/a93aee9f2dd424acafa108fa8c7e6cdb614dde18/n8n-nodes-voice-ai-cloudpbx-vain",
+  "homepage": "https://geschaeftskunden.telekom.de/business",
   "author": {
     "name": "André Rink",
     "email": "andre.rink@telekom.de"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.devops.telekom.de/agentic-ai-platform/magenta-ai-plattform/n8n-nodes-voice-ai-cloudpbx.git"
   },
   "main": "index.js",
   "scripts": {
