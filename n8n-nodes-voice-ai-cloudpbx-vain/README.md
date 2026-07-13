@@ -1,6 +1,6 @@
 # n8n-nodes-voice-ai-cloudpbx
 
-This is an n8n community node that integrates with the **CloudPBX Voice AI** service by Telekom Deutschland. It receives call summaries via webhook and automatically extracts structured tasks and calendar appointments for use in your workflows.
+This is an n8n community node that integrates with the **CloudPBX Voice AI Notes** service by Telekom Deutschland. It receives call summaries via webhook and automatically extracts structured tasks and calendar appointments for use in your workflows.
 
 ## Features
 
