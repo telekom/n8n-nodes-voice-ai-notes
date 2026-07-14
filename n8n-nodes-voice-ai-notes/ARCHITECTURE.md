@@ -1,8 +1,8 @@
 # Technical Architecture — n8n-nodes-voice-ai-notes
 
 **Author:** André Rink · andre.rink@telekom.de  
-**Version:** 0.3.3  
-**Package:** `n8n-nodes-voice-ai-notes`  
+**Version:** 0.4.1  
+**Package:** `@t-digital/n8n-nodes-voice-ai-notes`  
 **License:** MIT
 
 ---
@@ -198,15 +198,19 @@ The node is being prepared for submission to the **n8n Creator Portal** for offi
 
 | Requirement | Status |
 |---|---|
-| Package name starts with `n8n-nodes-` | ✅ |
+| Package name matches `@<scope>/n8n-nodes-*` | ✅ `@t-digital/n8n-nodes-voice-ai-notes` |
 | `n8n-community-node-package` keyword present | ✅ |
 | MIT license | ✅ |
 | No runtime dependencies | ✅ |
+| No `process.env` / filesystem access | ✅ |
 | TypeScript implementation | ✅ |
 | English-only UI text | ✅ |
 | Boolean descriptions start with "Whether…" | ✅ |
 | Password fields masked | ✅ |
 | README with usage documentation | ✅ |
-| GitHub Actions publish workflow with provenance | ✅ (template ready) |
-| Public GitHub repository | ⬜ pending |
-| Published to npm | ⬜ pending |
+| `repository` field in `package.json` matches GitHub repo | ✅ (added, pending repo push) |
+| Public GitHub repository | 🟡 provisional URL set (https://github.com/telekom/n8n-nodes-voice-ai-notes), not yet confirmed live |
+| Published to npm | ✅ (`@t-digital/n8n-nodes-voice-ai-notes`) |
+| Published **with npm provenance** | ❌ confirmed failing — `npx @n8n/scan-community-package` rejects 0.3.3 and 0.4.0 because both were published locally (`npm publish`), not via CI. Must publish 0.4.1+ through `.github/workflows/publish.yml` |
+| `NPM_TOKEN` secret (or Trusted Publisher) configured on GitHub repo | ❌ not yet set up |
+| `npx @n8n/scan-community-package` passes end-to-end | ❌ blocked by the provenance failure above; re-run once 0.4.1 is published via the workflow |

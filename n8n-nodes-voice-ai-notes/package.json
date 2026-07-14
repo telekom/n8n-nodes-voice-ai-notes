@@ -1,6 +1,6 @@
 {
   "name": "@t-digital/n8n-nodes-voice-ai-notes",
-  "version": "0.3.3",
+  "version": "0.4.1",
   "description": "n8n community node for CloudPBX Voice AI – automatically receives call summaries via webhook and extracts tasks and appointments",
   "keywords": [
     "n8n-community-node-package",
@@ -14,15 +14,22 @@
     "telephony"
   ],
   "license": "MIT",
-  "homepage": "https://geschaeftskunden.telekom.de/business",
+  "homepage": "https://github.com/telekom/n8n-nodes-voice-ai-notes#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/telekom/n8n-nodes-voice-ai-notes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/telekom/n8n-nodes-voice-ai-notes/issues"
+  },
   "author": {
     "name": "André Rink",
     "email": "andre.rink@telekom.de"
   },
   "scripts": {
     "build": "tsc",
-    "lint": "npx @n8n/scan-community-package n8n-nodes-voice-ai-notes",
-    "test": "npx @n8n/scan-community-package n8n-nodes-voice-ai-notes",
+    "lint": "npx @n8n/scan-community-package @t-digital/n8n-nodes-voice-ai-notes",
+    "test": "npx @n8n/scan-community-package @t-digital/n8n-nodes-voice-ai-notes",
     "prepublishOnly": "npm run build"
   },
   "files": [
