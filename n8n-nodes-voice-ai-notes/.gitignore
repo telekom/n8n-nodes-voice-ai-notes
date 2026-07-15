@@ -1,9 +1,0 @@
-node_modules/
-dist/
-workflows/
-*.tgz
-review.html
-voice-ai-notes-review.zip
-_review_stage/
-.claude/
-.github/
