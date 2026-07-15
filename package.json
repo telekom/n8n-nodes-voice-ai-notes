@@ -1,6 +1,6 @@
 {
   "name": "@t-digital/n8n-nodes-voice-ai-notes",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "n8n community node for CloudPBX Voice AI – automatically receives call summaries via webhook and extracts tasks and appointments",
   "keywords": [
     "n8n-community-node-package",
