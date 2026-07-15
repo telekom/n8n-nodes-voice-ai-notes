@@ -1,93 +1,120 @@
-# n8n-nodes
+# n8n-nodes-voice-ai-notes
 
+This is an n8n community node that integrates with the **Voice AI Notes** service by Telekom Deutschland. It receives call summaries via webhook and automatically extracts structured tasks and calendar appointments for use in your workflows.
 
+## Features
 
-## Getting started
+- Receives Voice AI call summaries from CloudPBX via webhook
+- Authenticates inbound requests using a shared API key (`X-API-Key` header)
+- Validates the payload against the expected CloudPBX schema version
+- Extracts tasks, appointments, participants, and topics from the call summary
+- Four output modes to fit different workflow needs
+- Dual outputs: **Success** and **Rejected** — rejected requests are routed to a separate output pin for logging or alerting without a separate IF node
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Supported Output Modes
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.devops.telekom.de/agentic-ai-platform/magenta-ai-plattform/n8n-nodes.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://gitlab.devops.telekom.de/agentic-ai-platform/magenta-ai-plattform/n8n-nodes/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+| Mode | Description |
+|---|---|
+| **Tasks Only** | Outputs each extracted task as a separate item |
+| **Tasks + Appointments** | Outputs tasks and appointments as separate typed items |
+| **Full Summary** | Outputs the complete call summary as a single item |
+| **Tasks + Context** *(default)* | Outputs each task together with full call context (summary, participants, topics) |
 
 ## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Follow the [n8n community node installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) to install this node in your n8n instance.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+```
+n8n-nodes-voice-ai-notes
+```
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## Credentials
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+This node requires **Voice AI Notes** credentials with three fields:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+| Field | Description |
+|---|---|
+| **Username** | Your CloudPBX username (email address, e.g. `user@deutschland-lan.de`) |
+| **Password** | Your CloudPBX password |
+| **Webhook API Key** | A shared secret configured in the CloudPBX Voice AI webhook settings. CloudPBX sends this value in the `X-API-Key` header with every webhook request. |
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Setting up the Webhook API Key
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+1. In your n8n node, create a new **Voice AI Notes** credential and fill in all three fields.
+2. Copy the webhook URL from the node (shown after activating the workflow).
+3. In the CloudPBX portal, navigate to your Voice AI configuration and enter:
+   - **Webhook URL**: your n8n webhook URL
+   - **API Key**: the same value you set as *Webhook API Key* in the credential
+
+## How It Works
+
+When CloudPBX finishes processing a call, it sends a POST request to the webhook URL with the call summary payload. The node:
+
+1. Verifies the `X-API-Key` header against the key stored in your credentials using constant-time comparison
+2. Validates the payload schema version against the expected version (`0.2.1`)
+3. Extracts and structures the call data according to the selected output mode
+4. Routes the result to the **Success** output, or to the **Rejected** output on auth or schema failure
+
+## Payload Structure
+
+The node expects the CloudPBX Voice AI webhook payload format (schema version `0.2.1`):
+
+```json
+{
+  "schemaVersion": "0.2.1",
+  "callIdentifier": "abc-123",
+  "summary": "Call about the project deadline and next steps.",
+  "callParticipants": {
+    "vainCustomerPhoneNumber": "+4922147106642",
+    "otherAttendeePhoneNumber": "+491713920042"
+  },
+  "toDos": [
+    { "title": "Send contract", "assignee": "John" }
+  ],
+  "calendarEntries": [
+    { "title": "Follow-up call", "start": "2024-12-01T10:00:00Z", "end": "2024-12-01T10:30:00Z" }
+  ],
+  "phoneCallAttendees": [
+    { "name": "Alice", "role": "host" }
+  ],
+  "topics": [
+    { "title": "Contract", "details": ["deadline", "terms"] }
+  ],
+  "callerDetails": ["+4922147106642"]
+}
+```
+
+## Example Workflow
+
+1. Add the **Voice AI Notes** trigger node to your workflow
+2. Configure your **Voice AI Notes** credentials
+3. Select your preferred output mode (default: *Tasks + Context*)
+4. Connect the **Success** output to downstream nodes, for example:
+   - Create tasks in Todoist, ClickUp, or Microsoft To Do
+   - Add appointments to Google Calendar or Outlook
+   - Send a summary to Slack or Microsoft Teams
+5. Optionally connect the **Rejected** output to a logging or alerting node
+
+## Configuration Options
+
+### Include Appointments
+Whether to include calendar entries alongside tasks in the output (available in *Tasks + Appointments* and *Tasks + Context* modes).
+
+### Additional Fields
+
+| Field | Default | Description |
+|---|---|---|
+| Add Metadata | `true` | Attaches metadata (timestamp, caller details) to each output item |
+| Filter Empty Tasks | `true` | Filters out tasks or appointments with empty titles |
+| Add Item Index | `true` | Adds a sequential index to each output item |
+| Response Message | *(success text)* | The response body message sent back to CloudPBX |
+| Response Status Code | `200` | The HTTP status code returned to CloudPBX (200–299) |
+
+## Resources
+
+- [CloudPBX API documentation](https://cpbx-hilfe.deutschland-lan.de/de/ratgeber-zur-konfiguration/tipps-und-tricks/einstellungshilfen/nutzung-der-cpbx-api?mode=user)
+- [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+[MIT](LICENSE)
