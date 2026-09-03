@@ -24,7 +24,7 @@ The node eliminates manual integration effort between the CloudPBX telephony pla
 | Webhook path | `/webhook/voiceai` |
 | Response mode | `onReceived` (immediate HTTP 200 before workflow executes) |
 | n8n API version | 1 |
-| Output | Single `main` output |
+| Outputs | Five `main` outputs: Success, Rejected, Summary, Tasks, Appointments |
 
 ### Input payload structure
 
@@ -61,6 +61,16 @@ The node expects the CloudPBX Voice AI webhook format (schema v0.2.1), with all 
 | `tasksOnly` | Flat task list, no context |
 | `tasksAndAppointments` | Tasks and appointments as mixed item stream |
 | `fullSummary` | Single item containing the complete raw payload |
+
+These apply only to the **Success** pin. Three additional pins are always populated
+independently of the selected mode, so downstream nodes get the exact cardinality
+they need without a Filter node in between:
+
+| Pin | Items per call |
+|---|---|
+| `Summary` | Always exactly 1 |
+| `Tasks` | One per extracted task |
+| `Appointments` | One per extracted appointment |
 
 ---
 

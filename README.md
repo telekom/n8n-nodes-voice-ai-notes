@@ -9,7 +9,7 @@ This is an n8n community node that integrates with the **Voice AI Notes** servic
 - Validates the payload against the expected CloudPBX schema version
 - Extracts tasks, appointments, participants, and topics from the call summary
 - Four output modes to fit different workflow needs
-- Dual outputs: **Success** and **Rejected** — rejected requests are routed to a separate output pin for logging or alerting without a separate IF node
+- Five output pins — **Success**, **Rejected**, **Summary**, **Tasks**, **Appointments** — so downstream nodes only receive the item shape and cardinality they need
 
 ## Supported Output Modes
 
@@ -84,15 +84,27 @@ The node expects the CloudPBX Voice AI webhook payload format (schema version `0
 }
 ```
 
+## Output Pins
+
+| Pin | Items per call | Typical use |
+|---|---|---|
+| **Success** | Depends on the selected Output Mode (see above) | General-purpose output, shaped by the Output Mode dropdown |
+| **Rejected** | 1 (only on auth/schema failure) | Logging or alerting on rejected requests |
+| **Summary** | Always exactly 1 | Nodes that should fire once per call regardless of task count — e.g. sending a single notification email |
+| **Tasks** | One per extracted task | Nodes that should fire once per task — e.g. creating a Todoist/ClickUp task |
+| **Appointments** | One per extracted appointment | Nodes that should fire once per appointment — e.g. creating a Google Calendar event |
+
+The **Summary**, **Tasks**, and **Appointments** pins are always populated (respecting the *Filter Empty Tasks* setting) regardless of the Output Mode dropdown, so you can wire a "send one email per call" node to **Summary** and a "create one task per to-do" node to **Tasks** without them interfering with each other or needing a Filter node in between.
+
 ## Example Workflow
 
 1. Add the **Voice AI Notes** trigger node to your workflow
 2. Configure your **Voice AI Notes** credentials
-3. Select your preferred output mode (default: *Tasks + Context*)
-4. Connect the **Success** output to downstream nodes, for example:
-   - Create tasks in Todoist, ClickUp, or Microsoft To Do
-   - Add appointments to Google Calendar or Outlook
-   - Send a summary to Slack or Microsoft Teams
+3. Select your preferred output mode for the **Success** pin (default: *Tasks + Context*)
+4. Connect downstream nodes to the pin matching their intended cardinality, for example:
+   - **Tasks** → create tasks in Todoist, ClickUp, or Microsoft To Do
+   - **Appointments** → add events to Google Calendar or Outlook
+   - **Summary** → send a single call summary to Slack, Microsoft Teams, or via email
 5. Optionally connect the **Rejected** output to a logging or alerting node
 
 ## Configuration Options

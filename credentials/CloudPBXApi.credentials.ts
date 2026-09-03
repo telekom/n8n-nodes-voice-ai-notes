@@ -7,8 +7,8 @@ import {
 
 export class CloudPBXApi implements ICredentialType {
 	name = 'cloudPBXApi';
-	displayName = 'Voice AI Notes';
-	icon = 'file:voiceAINotesWebhook.png' as const;
+	displayName = 'Voice AI Notes API';
+	icon = 'file:voiceAINotesWebhook.svg' as const;
 	documentationUrl = 'https://cpbx-hilfe.deutschland-lan.de/de/ratgeber-zur-konfiguration/tipps-und-tricks/einstellungshilfen/nutzung-der-cpbx-api?mode=user';
 
 	properties: INodeProperties[] = [

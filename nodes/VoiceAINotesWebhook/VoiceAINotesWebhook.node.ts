@@ -2,15 +2,16 @@ import {
 	IWebhookFunctions,
 	IWebhookResponseData,
 	INodeType,
+	INodeTypeDescription,
 	IDataObject,
 	NodeOperationError,
 } from 'n8n-workflow';
 
-import { nodeDescription } from './nodeDescription';
 import { WebhookPayload, CloudPBXApiCredentials } from './types';
 import {
 	CLOUDPBX_SCHEMA_VERSION,
 	OUTPUT_MODES,
+	ITEM_TYPES,
 	DEFAULT_RESPONSE_MESSAGE,
 	HTTP_STATUS_CODE_MIN,
 	HTTP_STATUS_CODE_MAX,
@@ -25,13 +26,131 @@ import {
 function reject(statusCode: number, error: string): IWebhookResponseData {
 	return {
 		webhookResponse: { status: statusCode, body: { success: false, error } },
-		// output 0 (Success) empty, output 1 (Rejected) carries the error metadata
-		workflowData: [[], [{ json: { _statusCode: statusCode, _error: error, _receivedAt: new Date().toISOString() } }]],
+		// outputs: Success, Rejected, Summary, Tasks, Appointments — only Rejected carries data here
+		workflowData: [[], [{ json: { _statusCode: statusCode, _error: error, _receivedAt: new Date().toISOString() } }], [], [], []],
 	};
 }
 
 export class VoiceAINotesWebhook implements INodeType {
-	description = nodeDescription;
+	description: INodeTypeDescription = {
+		displayName: 'Voice AI Notes',
+		name: 'voiceAINotesWebhook',
+		icon: 'file:voiceAINotesWebhook.svg',
+		group: ['trigger'],
+		version: 1,
+		description: 'Receives Voice AI call summaries and automatically extracts tasks and appointments',
+		defaults: {
+			name: 'Voice AI Notes',
+		},
+		inputs: [],
+		outputs: ['main', 'main', 'main', 'main', 'main'],
+		outputNames: ['Success', 'Rejected', 'Summary', 'Tasks', 'Appointments'],
+		webhooks: [
+			{
+				name: 'default',
+				httpMethod: 'POST',
+				responseMode: 'onReceived',
+				path: 'voiceai',
+			},
+		],
+		credentials: [
+			{
+				name: 'cloudPBXApi',
+				required: true,
+			},
+		],
+		properties: [
+			{
+				displayName: 'Output Mode',
+				name: 'outputMode',
+				type: 'options',
+				options: [
+					{
+						name: 'Tasks Only',
+						value: 'tasksOnly',
+						description: 'Output only the extracted tasks',
+					},
+					{
+						name: 'Tasks + Appointments',
+						value: 'tasksAndAppointments',
+						description: 'Output tasks and appointments as separate items',
+					},
+					{
+						name: 'Full Summary',
+						value: 'fullSummary',
+						description: 'Output the complete summary with all fields',
+					},
+					{
+						name: 'Tasks + Context',
+						value: 'tasksWithContext',
+						description: 'Output tasks with call context (summary, participants, topics)',
+					},
+				],
+				default: 'tasksWithContext',
+				description: 'How to structure the output data',
+			},
+			{
+				displayName: 'Include Appointments',
+				name: 'includeAppointments',
+				type: 'boolean',
+				default: true,
+				description: 'Whether to include appointment suggestions in the output',
+				displayOptions: {
+					show: {
+						outputMode: ['tasksAndAppointments', 'tasksWithContext'],
+					},
+				},
+			},
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				options: [
+					{
+						displayName: 'Add Item Index',
+						name: 'addIndex',
+						type: 'boolean',
+						default: true,
+						description: 'Whether to add a sequential index to each output item',
+					},
+					{
+						displayName: 'Add Metadata',
+						name: 'addMetadata',
+						type: 'boolean',
+						default: true,
+						description: 'Whether to add metadata (timestamp, caller details) to each output item',
+					},
+					{
+						displayName: 'Filter Empty Tasks',
+						name: 'filterEmpty',
+						type: 'boolean',
+						default: true,
+						description: 'Whether to filter out empty or invalid tasks and appointments',
+					},
+					{
+						displayName: 'Response Message',
+						name: 'responseMessage',
+						type: 'string',
+						default: 'Voice AI data received and processed successfully',
+						description: 'The response message returned to the webhook sender',
+					},
+					{
+						displayName: 'Response Status Code',
+						name: 'responseCode',
+						type: 'number',
+						default: 200,
+						typeOptions: {
+							minValue: 200,
+							maxValue: 299,
+						},
+						description: 'The HTTP status code returned to the webhook sender (must be 200–299)',
+					},
+				],
+			},
+		],
+	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const outputMode = this.getNodeParameter('outputMode') as string;
@@ -177,6 +296,32 @@ export class VoiceAINotesWebhook implements INodeType {
 					return reject(400, `Unknown output mode: ${outputMode}`);
 			}
 
+			// Dedicated per-type pins, populated regardless of Output Mode: Summary always
+			// emits exactly one item per call, so downstream nodes that should fire once per
+			// call (e.g. "send a notification email") don't get triggered once per task.
+			const summaryItem: IDataObject = {
+				...context,
+				totalTasks: filteredTasks.length,
+				totalAppointments: filteredAppointments.length,
+			};
+			if (includeMetadata) {
+				summaryItem._metadata = {
+					receivedAt,
+					itemType: ITEM_TYPES.SUMMARY,
+					schemaVersion: CLOUDPBX_SCHEMA_VERSION,
+					callerDetails,
+					totalTasks: filteredTasks.length,
+					totalAppointments: filteredAppointments.length,
+				};
+			}
+
+			const taskItems = filteredTasks.map((task, index) =>
+				buildTaskItem(task, index, filteredTasks, includeIndex, includeMetadata, receivedAt, callerDetails),
+			);
+			const appointmentItems = filteredAppointments.map((apt, index) =>
+				buildAppointmentItem(apt, index, filteredAppointments, filteredTasks, includeIndex, includeMetadata, receivedAt, callerDetails),
+			);
+
 			const responseMessage = (additionalFields.responseMessage as string) || DEFAULT_RESPONSE_MESSAGE;
 			const rawCode = (additionalFields.responseCode as number) ?? HTTP_STATUS_CODE_MIN;
 			const responseCode = rawCode >= HTTP_STATUS_CODE_MIN && rawCode <= HTTP_STATUS_CODE_MAX ? rawCode : HTTP_STATUS_CODE_MIN;
@@ -194,8 +339,14 @@ export class VoiceAINotesWebhook implements INodeType {
 						receivedAt,
 					},
 				},
-					// output 0 (Success) carries the data, output 1 (Rejected) empty
-				workflowData: [returnData.map((item) => ({ json: item })), []],
+				// outputs: Success, Rejected, Summary, Tasks, Appointments
+				workflowData: [
+					returnData.map((item) => ({ json: item })),
+					[],
+					[{ json: summaryItem }],
+					taskItems.map((item) => ({ json: item })),
+					appointmentItems.map((item) => ({ json: item })),
+				],
 			};
 
 		} catch (error) {
