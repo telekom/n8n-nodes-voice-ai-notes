@@ -1,9 +1,11 @@
 import {
+	IHookFunctions,
 	IWebhookFunctions,
 	IWebhookResponseData,
 	INodeType,
 	INodeTypeDescription,
 	IDataObject,
+	NodeConnectionTypes,
 	NodeOperationError,
 } from 'n8n-workflow';
 
@@ -31,19 +33,26 @@ function reject(statusCode: number, error: string): IWebhookResponseData {
 	};
 }
 
-export class VoiceAINotesWebhook implements INodeType {
+export class VoiceAiNotesWebhook implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Voice AI Notes',
-		name: 'voiceAINotesWebhook',
-		icon: 'file:voiceAINotesWebhook.svg',
+		name: 'voiceAiNotesWebhook',
+		icon: 'file:voiceAiNotesWebhook.svg',
 		group: ['trigger'],
 		version: 1,
+		subtitle: '={{$parameter["outputMode"]}}',
 		description: 'Receives Voice AI call summaries and automatically extracts tasks and appointments',
 		defaults: {
 			name: 'Voice AI Notes',
 		},
 		inputs: [],
-		outputs: ['main', 'main', 'main', 'main', 'main'],
+		outputs: [
+			NodeConnectionTypes.Main,
+			NodeConnectionTypes.Main,
+			NodeConnectionTypes.Main,
+			NodeConnectionTypes.Main,
+			NodeConnectionTypes.Main,
+		],
 		outputNames: ['Success', 'Rejected', 'Summary', 'Tasks', 'Appointments'],
 		webhooks: [
 			{
@@ -150,6 +159,25 @@ export class VoiceAINotesWebhook implements INodeType {
 				],
 			},
 		],
+	};
+
+	// The CloudPBX Voice AI webhook is registered out-of-band: the user pastes
+	// this node's webhook URL into the CloudPBX admin panel. CloudPBX exposes no
+	// API to create or remove the subscription, so the lifecycle hooks are
+	// no-ops — `checkExists` reports the webhook as present so n8n never calls
+	// `create`, and `delete` has nothing to tear down.
+	webhookMethods = {
+		default: {
+			async checkExists(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+			async create(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+			async delete(this: IHookFunctions): Promise<boolean> {
+				return true;
+			},
+		},
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
@@ -355,4 +383,4 @@ export class VoiceAINotesWebhook implements INodeType {
 	}
 }
 
-module.exports = { VoiceAINotesWebhook };
+module.exports = { VoiceAiNotesWebhook };

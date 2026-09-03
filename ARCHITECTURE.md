@@ -166,9 +166,14 @@ n8n-nodes-voice-ai-notes/
 ├── credentials/
 │   └── CloudPBXApi.credentials.ts     # Credential type definition
 ├── nodes/
-│   └── VoiceAINotesWebhook/
-│       ├── VoiceAINotesWebhook.node.ts # Node implementation
-│       └── voiceAINotesWebhook.png     # Node icon
+│   └── VoiceAiNotesWebhook/
+│       ├── VoiceAiNotesWebhook.node.ts # Node implementation (class + INodeTypeDescription)
+│       ├── constants.ts                # Shared constants
+│       ├── helpers.ts                  # Item builders, safe compare, filters
+│       ├── types.ts                    # Payload parsing + interfaces
+│       ├── codex.json                  # n8n categories metadata
+│       └── voiceAiNotesWebhook.svg     # Node icon
+├── scripts/copy-icons.js              # Copies icon assets into dist/ after tsc
 ├── dist/                              # Compiled output (shipped to n8n)
 ├── .github/workflows/publish.yml      # npm publish with provenance
 ├── tsconfig.json
@@ -185,7 +190,7 @@ n8n-nodes-voice-ai-notes/
 2. CloudPBX POSTs summary to n8n webhook URL
         │  Header: X-API-Key: <webhookApiKey>
         │
-3. n8n routes request to VoiceAINotesWebhook node
+3. n8n routes request to VoiceAiNotesWebhook node
         │
 4. Node validates X-API-Key against credential store
         │  → 401 Unauthorized on failure
