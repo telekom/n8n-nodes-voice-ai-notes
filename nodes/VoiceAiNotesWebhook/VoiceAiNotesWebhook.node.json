@@ -1,8 +1,5 @@
 {
   "categories": ["Communication"],
-  "subcategories": {
-    "Communication": ["Phone"]
-  },
   "resources": {
     "primaryDocumentation": [
       {

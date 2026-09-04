@@ -171,7 +171,7 @@ n8n-nodes-voice-ai-notes/
 │       ├── constants.ts                # Shared constants
 │       ├── helpers.ts                  # Item builders, safe compare, filters
 │       ├── types.ts                    # Payload parsing + interfaces
-│       ├── codex.json                  # n8n categories metadata
+│       ├── VoiceAiNotesWebhook.node.json # n8n codex metadata (category, docs link, aliases)
 │       └── voiceAiNotesWebhook.svg     # Node icon
 ├── scripts/copy-icons.js              # Copies icon assets into dist/ after tsc
 ├── dist/                              # Compiled output (shipped to n8n)

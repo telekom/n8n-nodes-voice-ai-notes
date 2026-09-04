@@ -1,6 +1,6 @@
 {
   "name": "@t-digital/n8n-nodes-voice-ai-notes",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "n8n community node for Voice AI automatically receives call summaries via webhook and extracts tasks and appointments",
   "keywords": [
     "n8n-community-node-package",
@@ -27,7 +27,7 @@
     "email": "andre.rink@telekom.de"
   },
   "scripts": {
-    "build": "tsc && node scripts/copy-icons.js",
+    "build": "tsc && node scripts/copy-assets.js",
     "lint": "eslint --no-config-lookup -c eslint.config.mjs package.json \"nodes/**/*.{ts,js,json}\" \"credentials/**/*.{ts,js,json}\"",
     "scan": "npx @n8n/scan-community-package @t-digital/n8n-nodes-voice-ai-notes",
     "test": "npm run lint",

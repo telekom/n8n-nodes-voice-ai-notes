@@ -382,5 +382,3 @@ export class VoiceAiNotesWebhook implements INodeType {
 		}
 	}
 }
-
-module.exports = { VoiceAiNotesWebhook };

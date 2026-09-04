@@ -1,10 +1,11 @@
 'use strict';
 
 /**
- * Copies node/credential icon assets (*.svg, *.png) into the compiled `dist`
- * tree, mirroring the source folder layout. `tsc` only emits JS, so without
- * this step the published package would ship without the icon files the
- * `icon: 'file:…'` references point at.
+ * Copies non-TypeScript assets (icons and codex `*.node.json` files) into the
+ * compiled `dist` tree, mirroring the source folder layout. `tsc` only emits
+ * JS, so without this step the published package would ship without the icon
+ * files the `icon: 'file:…'` references point at, and n8n would not discover
+ * the codex metadata (which it looks up next to the compiled `.node.js`).
  */
 
 const fs = require('fs');
@@ -12,15 +13,20 @@ const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
 const sourceDirs = ['nodes', 'credentials'];
-const iconExtensions = new Set(['.svg', '.png']);
 
-function copyIconsFrom(sourceDir) {
+function isAssetFile(name) {
+	const ext = path.extname(name).toLowerCase();
+	if (ext === '.svg' || ext === '.png') return true;
+	return name.endsWith('.node.json');
+}
+
+function copyAssetsFrom(sourceDir) {
 	const absoluteSource = path.join(rootDir, sourceDir);
 	if (!fs.existsSync(absoluteSource)) return;
 
 	for (const entry of fs.readdirSync(absoluteSource, { withFileTypes: true, recursive: true })) {
 		if (!entry.isFile()) continue;
-		if (!iconExtensions.has(path.extname(entry.name).toLowerCase())) continue;
+		if (!isAssetFile(entry.name)) continue;
 
 		const parentDir = entry.parentPath ?? entry.path;
 		const from = path.join(parentDir, entry.name);
@@ -33,5 +39,5 @@ function copyIconsFrom(sourceDir) {
 }
 
 for (const sourceDir of sourceDirs) {
-	copyIconsFrom(sourceDir);
+	copyAssetsFrom(sourceDir);
 }
